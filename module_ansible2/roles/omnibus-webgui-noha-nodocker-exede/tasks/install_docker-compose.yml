@@ -1,7 +1,0 @@
----
-#Install docker-compose 
-#pip install 'docker-compose'
-
-- name: Install virtualenv
-pip: name=docker-compose
-sudo: yes
