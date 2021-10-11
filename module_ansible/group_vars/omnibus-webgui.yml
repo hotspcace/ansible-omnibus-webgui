@@ -1,0 +1,43 @@
+---
+fqdn: "{{inventory_hostname}}.{{domain}}"
+myhost: "{{inventory_hostname}}.{{domain}}" 
+MY_HOST: "{{inventory_hostname}}.{{domain}}" 
+myobjectserver: "{{objname}}"
+mywebguiserver: "{{inventory_hostname}}.{{domain}}" 
+OBJSRV: "AGG_P"
+OBJSRV_PORT: "4100"
+CONFIGS_HOME: "/opt/accuoss/omnibus/configs/webgui"
+OBJECTSERVER_PRIMARY_HOST: "{{myobjectserver}}"
+MY_HOST: "{{mywebguiserver}}"
+OBJECTSERVER_PRIMARY_NAME: AGG_P 
+OBJECTSERVER_USER: netcool 
+OBJECTSERVER_PASSWORD: n3tc00l
+OBJECTSERVER_ENCRYPTED:
+OBJECTSERVER_ALGORITHM_ATTRIBUTE:
+OBJECTSERVER_SSL:
+OBJECTSERVER_PRIMARY_PORT: 4100
+OBJECTSERVER_SECONDARY_HOST:
+OBJECTSERVER_FAILOVER:
+OBJECTSERVER_SECONDARY_PORT:
+
+#ec2_group:
+#  - default
+#  - inbound-ssh-from-trusted
+#  - omnibus
+#ec2_instance_type: "{{ ec2_instance_type | default('m4.2xlarge') }}"
+#ec2_wait: yes
+#ec2_register: ec2
+#
+#ec2_data_volumes:
+#  - name: "{{inventory_hostname}}_{{env}}_root"
+#    volume_size: 20
+#    volume_type: gp2
+#    delete_on_termination: false 
+#    state: present
+#    device_name: /dev/sda1
+#  - name: "{{inventory_hostname}}_{{env}}_data"
+#    volume_size: 500
+#    volume_type: gp2
+#    delete_on_termination: false 
+#    state: present
+#    device_name: /dev/xvdg

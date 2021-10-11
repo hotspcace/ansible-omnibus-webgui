@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<agent-input>
+<variables>
+ <variable name='sharedLocation' value='/home/netcool/IBM/IBMIMShared'/>
+</variables>
+<server>
+  <repository location='/tmp/installwebgui/OMNIbus-v8.1.0.4-WebGUI.linux64/OMNIbusWebGUIRepository'/>
+  <repository location='/tmp/installwas/WASRepository/disk1'/>
+  <repository location='/tmp/installjazz/JAZZ_FOR_SM_1.1.2.1_FOR_LNX/JazzSMRepository/disk1'/>
+</server>
+<!-- Install location -->
+<profile id='IBM Netcool' installLocation='/opt/IBM/WebGUI'>
+<data key='eclipseLocation' value='/opt/IBM/WebGUI'/>
+<data key='user.import.profile' value='false'/>
+<!-- Operating systems, e.g., win32, linux, aix etc -->
+<data key='cic.selector.os' value='linux'/>
+<!-- Operating system architecture, e.g., x86,x86_64,ppc,ppc64 -->
+<data key='cic.selector.arch' value='x86_64'/>
+<!-- Window system, e.g., win32,gtk,motif -->
+<data key='cic.selector.ws' value='gtk'/>
+<!-- Lanuguage, e.g., en,fr -->
+<data key='cic.selector.nl' value='en'/>
+<data key='user.DashHomeDir' value='/opt/IBM/JazzSM/ui'/>
+<data key='user.WasHomeDir' value='/opt/IBM/WebSphere/AppServer'/>
+<data key='user.DashHomeWasServerName' value='server1'/>
+<data key='user.DashHomeUserID' value='smadmin'/>
+<data key='user.DashHomePwd' value='n3tc00l'/>
+<data key='user.DashHomeContextRoot' value='/ibm/console'/>
+<data key="user.Url,com.ibm.tivoli.netcool.omnibus.webgui" value="https://segra-objectserver:9987/Unity"/>
+<data key="user.UrlHost,com.ibm.tivoli.netcool.omnibus.webgui" value='segra-objectserver'/>
+<data key="user.UrlPort,com.ibm.tivoli.netcool.omnibus.webgui" value='9987'/>
+<data key="user.UrlProtocol,com.ibm.tivoli.netcool.omnibus.webgui" value='https'/>
+<data key="user.UrlContextRoot,com.ibm.tivoli.netcool.omnibus.webgui" value='Unity'/>
+<data key="user.DataSource,com.ibm.tivoli.netcool.omnibus.webgui" value="omnibus"/>
+</profile>
+<install modify='false'>
+<!-- Offering id's version can be retrieved from repository.xml file. List of features to install -->
+<offering id='com.ibm.tivoli.netcool.omnibus.webgui' version='8.1.4.201512041013' profile='IBM Netcool' features='VMM.feature,WebGUI.feature,Scala.feature' installFixes='none'/>
+</install>
+<preference name='com.ibm.cic.common.core.preferences.eclipseCache' value='${sharedLocation}'/>
+<preference name='com.ibm.cic.common.core.preferences.connectTimeout' value='30'/>
+<preference name='com.ibm.cic.common.core.preferences.readTimeout' value='45'/>
+<preference name='com.ibm.cic.common.core.preferences.downloadAutoRetryCount' value='0'/>
+<preference name='offering.service.repositories.areUsed' value='true'/>
+<preference name='com.ibm.cic.common.core.preferences.ssl.nonsecureMode' value='false'/>
+<preference name='com.ibm.cic.common.core.preferences.http.disablePreemptiveAuthentication' value='false'/>
+<preference name='http.ntlm.auth.kind' value='NTLM'/>
+<preference name='http.ntlm.auth.enableIntegrated.win32' value='true'/>
+<preference name='com.ibm.cic.common.core.preferences.preserveDownloadedArtifacts' value='false'/>
+<preference name='com.ibm.cic.common.core.preferences.keepFetchedFiles' value='false'/>
+<preference name='PassportAdvantageIsEnabled' value='false'/>
+<preference name='com.ibm.cic.common.core.preferences.searchForUpdates' value='false'/>
+<preference name='com.ibm.cic.agent.ui.displayInternalVersion' value='false'/>
+<preference name='com.ibm.cic.common.sharedUI.showErrorLog' value='true'/>
+<preference name='com.ibm.cic.common.sharedUI.showWarningLog' value='true'/>
+<preference name='com.ibm.cic.common.sharedUI.showNoteLog' value='true'/>
+</agent-input>

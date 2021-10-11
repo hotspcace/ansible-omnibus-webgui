@@ -1,0 +1,32 @@
+---
+fqdn: "{{inventory_hostname}}.{{domain}}"
+myhost: "{{inventory_hostname}}.{{domain}}" 
+MY_HOST: "{{inventory_hostname}}.{{domain}}" 
+myobjectserver: "{{objname}}"
+mywebguiserver: "{{inventory_hostname}}.{{domain}}" 
+
+ec2_group:
+  - default
+  - inbound-ssh-from-trusted
+  - omnibus
+ec2_instance_type: "{{ ec2_instance_type | default('m4.large') }}"
+ec2_wait: yes
+ec2_register: ec2
+
+docker_device: "/dev/xvdg"
+docker_volume_group: "direct-lvm"
+
+ec2_data_volumes:
+  - item:
+    name: "{{fqdn}}_docker"
+    device_name: "{{docker_device}}"
+    volume_size: 40
+    volume_type: gp2
+    delete_on_termination: false
+    state: present
+  - item:
+    name: "{{fqdn}}_data"
+    volume_size: 40
+    volume_type: gp2
+    delete_on_termination: false
+    state: present

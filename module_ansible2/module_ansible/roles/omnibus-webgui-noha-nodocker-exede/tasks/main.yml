@@ -1,0 +1,616 @@
+---
+
+- stat:
+    path: /opt/viasat
+  register: dircheck
+
+- debug:
+    msg: "Path exists and is a directory"
+  when: dircheck.stat.isdir is defined
+
+- debug:
+    msg: "/opt/viasat isn't defined (path doesn't exist)"
+  when: dircheck.stat.isdir is not defined
+
+- name: Use hostnamectl to set static hostname
+  shell: "hostnamectl set-hostname {{mywebguiserver}} --static"
+  become: true
+
+- name: Get hostname from this device
+  shell: "hostname -f"
+  args:
+    executable: /bin/bash
+  register: myhost
+
+- name: Debug myhost
+  debug: var=myhost.stdout
+#==============================================
+# Check to see if webgui is already installed
+#==============================================
+- name: Check to see if WebGUI process is up 
+  shell: "hostnamectl set-hostname {{mywebguiserver}} --static"
+  become: true
+
+
+- stat:
+    path: /opt/IBM
+  register: dircheck
+
+- debug:
+    msg: "Path exists and is a directory"
+  when: dircheck.stat.isdir is defined
+
+- debug:
+    msg: "/opt/viasat isn't defined (path doesn't exist)"
+  when: dircheck.stat.isdir is not defined
+
+
+#================================================
+- name: format webgui volume
+  filesystem:
+    fstype: ext4
+    dev: /dev/xvdg
+
+- name: create config mount point
+  file:
+    path: /opt/viasat
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create config mount point
+  file:
+    path: /opt/IBM
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create tmp directory for webgui install
+  file:
+    path: /opt/IBM/tmp/install/was
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create tmp directory for webgui install
+  file:
+    path: /opt/IBM/tmp/install/jazz
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create tmp directory for webgui install
+  file:
+    path: /opt/IBM/tmp/install/webgui
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create tmp directory for webgui install
+  file:
+    path: /opt/IBM/tmp/install/im
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: mount host config base volume
+  mount:
+    name: /opt/IBM
+    src: /dev/xvdg
+    fstype: ext4
+    state: mounted
+
+- name: create host config directory for webgui 
+  file: 
+    path: /opt/viasat/omnibus/configs/webgui
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Get Prod Objectserver IP
+  shell: "nslookup {{myobjectserver}}|grep \"Address: 10\"|cut -d \" \" -f2"
+  args:
+    executable: /bin/bash
+  register: myobjectserverip
+
+- name: Set variable for Objectserver IP Address
+  debug: var=myobjectserverip.stdout
+
+- name: Get webgui host IP
+  shell: "nslookup {{mywebguiserver}}|grep \"Address: 10\"|cut -d \" \" -f2"
+  args:
+    executable: /bin/bash
+  register: mywebguiserverip
+
+- name: Set variable for webgui servers IP Address
+  debug: var=mywebguiserverip.stdout
+
+- name: Update hosts file with objectserver entry
+  lineinfile:
+    dest: "/etc/hosts"
+    line: "{{myobjectserverip.stdout}}  {{myobjectserver}} objectserver"
+    owner: root
+    group: root
+
+- name: Update hosts file with objectserver entry
+  lineinfile:
+    dest: "/etc/hosts"
+    line: "{{mywebguiserverip.stdout}}  {{mywebguiserver}} webgui"
+    owner: root
+    group: root
+
+
+- name: Install yum packages using a list
+  yum:
+    name:
+      - tar
+      - hostname
+      - unzip
+      - audit-libs
+      - fontconfig
+      - freetype
+      - compat-libstdc++-33.i686
+      - glibc.i686
+      - gtk2
+      - libICE
+      - libSM
+      - libX11
+      - libXau
+      - libXcursor
+      - libXext
+      - libXft
+      - libXmu
+      - libXp
+      - libXpm
+      - libXrender
+      - libXt
+      - libXtst
+      - libstdc++.i686
+      - libgcc.i686
+      - libjpeg-turbo
+      - libpng12
+      - motif
+      - dejavu-fonts-common
+      - dejavu-sans-fonts
+      - expat
+      - glibc
+      - libgcc
+      - libidn
+      - libstdc++
+      - libuuid
+      - libxcb
+      - nss-softokn-freebl
+      - pam
+      - zlib
+      - nss-softokn-freebl.i686
+      - compat-libstdc++-33
+      - git
+      - logrotate
+      - strace
+      - vim
+      - bc
+
+- name: copy webgui config file
+  copy:
+    src: webgui-response.xml
+    dest: "/opt/viasat/omnibus/configs/webgui/webgui-response.xml"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy webgui watch_for_auth_elb_changes script
+  copy:
+    src: "watch_for_auth_elb_changes.sh"
+    dest: "/opt/watch_for_auth_elb_changes.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- cron:
+    name: "watch_for_auth_elb_changes"
+    minute: "1"
+    job: "/bin/bash /opt/watch_for_auth_elb_changes.sh"
+
+- name: copy webgui config file
+  copy:
+    src: "ncwDataSourceDefinitions.xml"
+    dest: "/opt/viasat/omnibus/configs/webgui/ncwDataSourceDefinitions.xml"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy run_jazzsm.sh config file
+  copy:
+    src: run_jazzsm.sh
+    dest: "/opt/viasat/omnibus/configs/webgui/run_jazzsm.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy webgui config file
+  copy:
+    src: server.init
+    dest: "/opt/viasat/omnibus/configs/webgui/server.init"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy webgui config file
+  copy:
+    src: server.xml
+    dest: "/opt/viasat/omnibus/configs/webgui/server.xml"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy webgui config file
+  copy:
+    src: serverindex.xml
+    dest: "/opt/viasat/omnibus/configs/webgui/serverindex.xml"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy wimconfig.xml file
+  copy:
+    src: wimconfig.xml
+    dest: "/opt/viasat/omnibus/configs/webgui/wimconfig.xml"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy post_webgui_config.sh file
+  copy:
+    src: post_webgui_config.sh
+    dest: "/opt/viasat/omnibus/configs/webgui/post_webgui_config.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy post_webgui_config2.sh file
+  copy:
+    src: post_webgui_config2.sh
+    dest: "/opt/viasat/omnibus/configs/webgui/post_webgui_config2.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy post_webgui_config3.sh file
+  copy:
+    src: post_webgui_config3.sh
+    dest: "/opt/viasat/omnibus/configs/webgui/post_webgui_config3.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy post_webgui_config4.sh file
+  copy:
+    src: post_webgui_config4.sh
+    dest: "/opt/viasat/omnibus/configs/webgui/post_webgui_config4.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy post_webgui_config5.sh file
+  copy:
+    src: post_webgui_config5.sh
+    dest: "/opt/viasat/omnibus/configs/webgui/post_webgui_config5.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy changeKeystorePassword.py file
+  copy:
+    src: changeKeystorePassword.py
+    dest: "/opt/viasat/omnibus/configs/webgui/changeKeystorePassword.py"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy awsldapcert file
+  copy:
+    src: awsldapcert
+    dest: "/opt/viasat/omnibus/configs/webgui/awsldapcert"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy awsldapcert2 file
+  copy:
+    src: awsldapcert2
+    dest: "/opt/viasat/omnibus/configs/webgui/awsldapcert2"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy heap_mem_increase.py file
+  copy:
+    src: heap_mem_increase.py
+    dest: "/opt/viasat/omnibus/configs/webgui/heap_mem_increase.py"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+- name: copy webgui config file
+  copy:
+    src: run_jazzsm.sh
+    dest: "/opt/viasat/omnibus/configs/webgui/run_jazzsm.sh"
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+
+
+#- name: copy replace_root_cert.py file
+##  copy:
+##    src: replace_root_cert.py
+##    dest: "/opt/viasat/omnibus/configs/webgui/replace_root_cert.py"
+##    owner: root
+##    group: root
+##    mode: 0755
+##    force: yes
+#
+##- name: copy hostname_change_non_prod.py file
+##  copy:
+##    src: hostname_change_non_prod.py
+##    dest: "/opt/viasat/omnibus/configs/webgui/hostname_change_non_prod.py"
+##    owner: root
+##    group: root
+##    mode: 0755
+##    force: yes
+#
+##- name: copy hostname_change_prod.py file
+##  copy:
+##    src: hostname_change_prod.py
+##    dest: "/opt/viasat/omnibus/configs/webgui/hostname_change_prod.py"
+##    owner: root
+##    group: root
+##    mode: 0755
+##    force: yes
+#
+##- name: copy replace_root_cert_prod.py file
+##  copy:
+##    src: replace_root_cert_prod.py
+##    dest: "/opt/viasat/omnibus/configs/webgui/replace_root_cert_prod.py"
+##    owner: root
+##    group: root
+##    mode: 0755
+##    force: yes
+#
+##- name: copy prod_root_replacement_cert
+##  copy:
+##    src: prod_root_replacement_cert
+##    dest: "/opt/viasat/omnibus/configs/webgui/root_replacement_cert"
+##    owner: root
+##    group: root
+##    mode: 0755
+##    force: yes
+#
+
+- name: Get IBM Install Manager install file 
+  uri:
+    url: https://artifactory.viasat.com/artifactory/maas-generic-local/agent.installer.linux.gtk.x86_64_1.8.4000.20151125_0201.zip 
+    method: GET 
+    dest: /opt/IBM/tmp/install/im/agent.installer.linux.gtk.x86_64_1.8.4000.20151125_0201.zip 
+    user: nms_exede_ci-cd 
+    password: AKCp2UNConPgDX6sZnkAoRQ1N8Qevm71RrHsTg86kEuC2BaYyeZfrhuRJX6StuSjUgaPNk5Hf 
+    force_basic_auth: yes
+    status_code: 200,304
+    creates: /opt/IBM/tmp/install/im/agent.installer.linux.gtk.x86_64_1.8.4000.20151125_0201.zip
+    timeout: 300 
+
+- unarchive:
+    src: /opt/IBM/tmp/install/im/agent.installer.linux.gtk.x86_64_1.8.4000.20151125_0201.zip 
+    dest: /opt/IBM/tmp/install/im/
+    remote_src: True
+
+- name: Get IBM WAS Install file 
+  uri:
+    url: https://artifactory.viasat.com/artifactory/maas-generic-local/IBM_WAS_FOR_JSM_FOR_LNX_ML.zip
+    method: GET
+    dest: /opt/IBM/tmp/install/was/IBM_WAS_FOR_JSM_FOR_LNX_ML.zip
+    user: nms_exede_ci-cd
+    password: AKCp2UNConPgDX6sZnkAoRQ1N8Qevm71RrHsTg86kEuC2BaYyeZfrhuRJX6StuSjUgaPNk5Hf
+    force_basic_auth: yes
+    status_code: 200,304
+    creates: /opt/IBM/tmp/install/was/IBM_WAS_FOR_JSM_FOR_LNX_ML.zip
+    timeout: 300 
+
+- unarchive:
+    src: /opt/IBM/tmp/install/was/IBM_WAS_FOR_JSM_FOR_LNX_ML.zip
+    dest: /opt/IBM/tmp/install/was/
+    remote_src: True
+
+- name: Get IBM JAZZ Install file
+  uri:
+    url: https://artifactory.viasat.com/artifactory/maas-generic-local/JAZZ_FOR_SM_1.1.2.1_FOR_LNX.zip
+    method: GET
+    dest: /opt/IBM/tmp/install/jazz/JAZZ_FOR_SM_1.1.2.1_FOR_LNX.zip
+    user: nms_exede_ci-cd
+    password: AKCp2UNConPgDX6sZnkAoRQ1N8Qevm71RrHsTg86kEuC2BaYyeZfrhuRJX6StuSjUgaPNk5Hf
+    force_basic_auth: yes
+    status_code: 200,304
+    creates: /opt/IBM/tmp/install/jazz/JAZZ_FOR_SM_1.1.2.1_FOR_LNX.zip
+    timeout: 300
+
+- unarchive:
+    src: /opt/IBM/tmp/install/jazz/JAZZ_FOR_SM_1.1.2.1_FOR_LNX.zip
+    dest: /opt/IBM/tmp/install/jazz/
+    remote_src: True
+
+- name: Get IBM JAZZ Install file
+  uri:
+    url: https://artifactory.viasat.com/artifactory/maas-generic-local/OMNIBUS-V8.1.0.4-WebGUI.linux64.zip
+    method: GET
+    dest: /opt/IBM/tmp/install/webgui/OMNIBUS-V8.1.0.4-WebGUI.linux64.zip
+    user: nms_exede_ci-cd
+    password: AKCp2UNConPgDX6sZnkAoRQ1N8Qevm71RrHsTg86kEuC2BaYyeZfrhuRJX6StuSjUgaPNk5Hf
+    force_basic_auth: yes
+    status_code: 200,304
+    creates: /opt/IBM/tmp/install/webgui/OMNIBUS-V8.1.0.4-WebGUI.linux64.zip
+    timeout: 300
+
+- unarchive:
+    src: /opt/IBM/tmp/install/webgui/OMNIBUS-V8.1.0.4-WebGUI.linux64.zip
+    dest: /opt/IBM/tmp/install/webgui/
+    remote_src: True
+
+#- name: Install IBM Install Manager
+#  shell: "cd /opt/IBM/tmp/install && /opt/IBM/tmp/install/im/userinstc --launcher.ini /opt/IBM/tmp/install/im/user-silent-install.ini -acceptLicense && /root/IBM/InstallationManager/eclipse/tools/imcl -input /opt/viasat/omnibus/configs/webgui/webgui-response.xml -silent -nosplash -acceptlicense -ShowVerboseProgress -log /root/install.log && /opt/IBM/JazzSM/profile/bin/startServer.sh server1 -script /opt/IBM/JazzSM/profile/bin/startJazz.sh"
+#  become: true
+
+- stat: path=/root/IBM/InstallationManager/eclipse/tools/imcl
+  register: install_manager_path 
+
+- debug: msg="The install manager is not installed so it will be installed now."
+  when: install_manager_path.stat.exists != True
+- debug: msg="The install manager is installed so this step will be skipped."
+  when: install_manager_path.stat.exists == True
+
+- name: Install IBM Install Manager 
+  shell: "cd /opt/IBM/tmp/install && /opt/IBM/tmp/install/im/userinstc --launcher.ini /opt/IBM/tmp/install/im/user-silent-install.ini -acceptLicense && /root/IBM/InstallationManager/eclipse/tools/imcl -input /opt/viasat/omnibus/configs/webgui/webgui-response.xml -silent -nosplash -acceptlicense -ShowVerboseProgress -log /root/install.log"
+  become: true
+  when: install_manager_path.stat.exists != True 
+
+- stat: path=/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml
+  register: ncwDataSourceDefinitionslink1
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml does not exist so something must have went wrong with the install. Please check and run again."
+  when: ncwDataSourceDefinitionslink1.stat.islnk is not defined
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml exists but is not a symlink so it will now become a symlink"
+  when: ncwDataSourceDefinitionslink1.stat.islnk is defined and ncwDataSourceDefinitionslink1.stat.islnk == False
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml exists and is already a symlink so this step will be skipped"
+  when: ncwDataSourceDefinitionslink1.stat.islnk is defined and ncwDataSourceDefinitionslink1.stat.islnk
+
+- stat: path=/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml
+  register: ncwDataSourceDefinitionslink2
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml does not exist so something must have went wrong with the install. Please check and run again."
+  when: ncwDataSourceDefinitionslink2.stat.islnk is not defined
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml exists but is not a symlink so it will now become a symlink"
+  when: ncwDataSourceDefinitionslink2.stat.islnk is defined and ncwDataSourceDefinitionslink2.stat.islnk == False
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml exists and is already a symlink so this step will be skipped"
+  when: ncwDataSourceDefinitionslink2.stat.islnk is defined and ncwDataSourceDefinitionslink2.stat.islnk
+
+- stat: path=/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml
+  register: wimconfiglink 
+- debug: msg="/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml does not exist so something must have went wrong with the install. Please check and run again."
+  when: wimconfiglink.stat.islnk is not defined
+- debug: msg="/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml exists but is not a symlink so it will now become a symlink"
+  when: wimconfiglink.stat.islnk is defined and wimconfiglink.stat.islnk == False
+- debug: msg="/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml exists and is already a symlink so this step will be skipped"
+  when: wimconfiglink.stat.islnk is defined and wimconfiglink.stat.islnk
+
+- stat: path=/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init
+  register: serverinitlink 
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init does not exist so something must have went wrong with the install. Please check and run again."
+  when: serverinitlink.stat.islnk is not defined
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init exists but is not a symlink so it will now become a symlink"
+  when: serverinitlink.stat.islnk is defined and serverinitlink.stat.islnk == False
+- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init exists and is already a symlink so this step will be skipped"
+  when: serverinitlink.stat.islnk is defined and serverinitlink.stat.islnk
+
+- name: Remove /opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml and create symlink  
+  shell: "rm -f /opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml && ln -s /opt/viasat/omnibus/configs/webgui/ncwDataSourceDefinitions.xml /opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml"
+  become: true
+  when: ncwDataSourceDefinitionslink1.stat.islnk is defined and ncwDataSourceDefinitionslink1.stat.islnk == False
+
+- name: Remove /opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml and create symlink 
+  shell: "rm -f /opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml && ln -s /opt/viasat/omnibus/configs/webgui/ncwDataSourceDefinitions.xml /opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml"
+  become: true
+  when: ncwDataSourceDefinitionslink2.stat.islnk is defined and ncwDataSourceDefinitionslink2.stat.islnk == False  
+
+- name: Remove /opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml and create symlink 
+  shell: "rm -f /opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml && ln -s /opt/viasat/omnibus/configs/webgui/wimconfig.xml /opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml"
+  become: true
+  when: wimconfiglink.stat.islnk is defined and wimconfiglink.stat.islnk == False
+
+- name: Remove /opt/IBM/netcool/gui/omnibus_webgui/etc/server.init and create symlink 
+  shell: "rm -f /opt/IBM/netcool/gui/omnibus_webgui/etc/server.init && ln -s /opt/viasat/omnibus/configs/webgui/server.init /opt/IBM/netcool/gui/omnibus_webgui/etc/server.init"
+  become: true
+  when: serverinitlink.stat.islnk is defined and serverinitlink.stat.islnk == False
+
+- name: Start the WebGUI server 
+  shell: "/opt/IBM/JazzSM/profile/bin/startServer.sh server1 -script /opt/IBM/JazzSM/profile/bin/startJazz.sh"
+  become: true
+
+- name: Run post configuration1 on container
+  shell: "/opt/viasat/omnibus/configs/webgui/post_webgui_config.sh"
+  become: true
+  register: post_results_1
+
+- debug:
+    var: post_results_1 
+    verbosity: 1
+
+- pause:
+    seconds: 30 
+
+- name: Run post configuration2 on container
+  shell: "/opt/viasat/omnibus/configs/webgui/post_webgui_config2.sh"
+  become: true
+  register: post_results_2
+
+- debug:
+    var: post_results_2
+    verbosity: 1
+
+- pause:
+    seconds: 30
+
+- name: Run post configuration3 on container
+  shell: "/opt/viasat/omnibus/configs/webgui/post_webgui_config3.sh"
+  become: true
+  register: post_results_3
+
+- debug:
+    var: post_results_3
+    verbosity: 1
+
+- pause:
+    seconds: 30
+
+
+#- name: Run post configuration4 on container
+#  shell: "/opt/viasat/omnibus/configs/webgui/post_webgui_config4.sh"
+#  become: true
+#  register: post_results_4
+#
+#- debug:
+#    var: post_results_4
+#    verbosity: 1
+
+#- pause:
+#    seconds: 30
+
+- name: Run post configuration5 on container
+  shell: "/opt/viasat/omnibus/configs/webgui/post_webgui_config5.sh"
+  become: true
+  register: post_results_5
+
+- debug:
+    var: post_results_5
+    verbosity: 1
+

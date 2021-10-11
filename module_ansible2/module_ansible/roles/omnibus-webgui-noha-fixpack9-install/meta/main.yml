@@ -1,0 +1,4 @@
+---
+#dependencies:
+#- role: nms-app-common
+#- role: docker

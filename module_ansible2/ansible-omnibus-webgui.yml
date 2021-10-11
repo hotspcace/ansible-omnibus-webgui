@@ -1,0 +1,30 @@
+---
+- hosts: "{{target}}"
+  strategy: debug
+  gather_facts: no
+  become: yes
+  vars_files:
+    - "{{myenv}}-ansible-omnibus-objectserver-ha-agg-primary-deploy.yml"
+    - "env.yml"
+  roles:
+#    - role: base
+#      tags: base
+
+    - role: ansible-omnibus-objectserver-ha-agg-primary-deploy 
+      tags: ansible-omnibus-objectserver-ha-agg-primary-deploy 
+
+    - role: logrotate 
+      tags: logrotate 
+
+#    - role: filebeat 
+#      tags: filebeat 
+
+    - role: collectd 
+      tags: collectd 
+
+    - role: vcmdb-deploy
+      tags: vcmdb-deploy
+
+    - role: vcmdb-deploy_complete
+      tags: vcmdb-deploy_complete
+

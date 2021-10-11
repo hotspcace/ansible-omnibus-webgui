@@ -1,0 +1,10 @@
+---
+- hosts: 10.160.100.119 
+  gather_facts: no
+  become: yes
+  vars_files:
+    - "omnibus-webgui.yml"
+   # - "env.yml"
+  roles:
+    - role: omnibus-webgui
+      tags: omnibus-webgui

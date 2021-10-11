@@ -1,0 +1,3 @@
+ [WARNING]: Optional dependency 'cryptography' raised an exception, falling back to 'Crypto'
+No config file found; using defaults
+ERROR! The vault password file /home/jmclean/AnsibleJM/roles/omnibus-webgui-noha-group-exede/files/vault.pw was not found

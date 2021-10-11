@@ -1,0 +1,1244 @@
+create or replace trigger group compatibility_triggers;
+go
+--
+create or replace trigger group ASB1;
+go
+--
+create or replace trigger group system_watch;
+go
+--
+create or replace trigger group WBAuto;
+go
+--
+create or replace trigger group WBMeta;
+go
+--
+create or replace trigger group failback_triggers;
+go
+--
+create or replace trigger group WBTrigger;
+go
+--
+create or replace trigger group self_monitoring_group;
+go
+--
+create or replace trigger group Disabled;
+go
+--
+create or replace trigger group sae;
+go
+--
+create or replace trigger group RCA;
+go
+--
+create or replace trigger group default_triggers;
+go
+--
+create or replace trigger group SB1;
+go
+--
+create or replace trigger group connection_watch;
+go
+--
+create or replace trigger group primary_only;
+go
+--
+create or replace trigger group security_watch;
+go
+--
+create or replace trigger group audit_config;
+go
+--
+create or replace trigger group profiler_triggers;
+go
+--
+create or replace trigger group trigger_stat_reports;
+go
+--
+create or replace trigger group stats_triggers;
+go
+--
+create or replace trigger group itnm_triggers;
+go
+--
+create or replace trigger group registry_triggers;
+go
+--
+create or replace trigger group WBPrimaryOnly;
+go
+--
+create or replace trigger group iduc_triggers;
+go
+--
+create or replace trigger group scala_triggers;
+go
+--
+create or replace trigger group WBTest;
+go
+--
+create or replace trigger group WBMail;
+go
+--
+create or replace trigger group WBAugment;
+go
+--
+create or replace trigger group oslc;
+go
+--
+create or replace trigger group automatic_backup_system;
+go
+--
+create or replace trigger group gateway_triggers;
+go
+--
+create or replace trigger webtop_compatibility
+group compatibility_triggers
+--
+create or replace trigger qoiOverrideComplete
+group ASB1
+--
+create or replace trigger DetectLinkLoad
+group ASB1
+--
+create or replace trigger DetectDupArpEntries
+group ASB1
+--
+create or replace trigger CommLossFlap
+group ASB1
+--
+create or replace trigger DetectBladeFailover
+group ASB1
+--
+create or replace trigger DetectCarrierThreshold
+group ASB1
+--
+create or replace trigger clientClassToCarrier
+group ASB1
+--
+create or replace trigger ClearModemTraps
+group ASB1
+--
+create or replace trigger DetectTelemetryOutage
+group ASB1
+--
+create or replace trigger qoiCarrierInsert
+group ASB1
+--
+create or replace trigger getLinkName
+group ASB1
+--
+create or replace trigger summaryEnrich
+group ASB1
+--
+create or replace trigger DetectBeam28PowerImbalance
+group ASB1
+--
+create or replace trigger clientClassToCarrierdb
+group ASB1
+--
+create or replace trigger qoiCarrierClear
+group ASB1
+--
+create or replace trigger CarrierPowerSingleAmplifier
+group ASB1
+--
+create or replace trigger DetectCacheTraps
+group ASB1
+--
+create or replace trigger DetectAndrewTrap
+group ASB1
+--
+create or replace trigger system_watch_shutdown
+group system_watch
+--
+create or replace trigger system_watch_startup
+group system_watch
+--
+create or replace trigger originalSeverity
+group WBAuto
+--
+create or replace trigger confirmationTrapClearing
+group WBAuto
+--
+create or replace trigger insertMetaOutstandingDNSRequests
+group WBMeta
+--
+create or replace trigger metaPepMemWarning
+group WBMeta
+--
+create or replace trigger detectDhcpServerFailure
+group WBMeta
+--
+create or replace trigger resync_old_events
+group failback_triggers
+--
+create or replace trigger detect_agg_gate_resync_complete
+group failback_triggers
+--
+create or replace trigger disconnect_all_clients
+group failback_triggers
+--
+create or replace trigger RCamHlth
+group WBTrigger
+--
+create or replace trigger wb_reset_event_filter_time
+group WBTrigger
+--
+create or replace trigger MailOnAmazonCloud
+group WBTrigger
+--
+create or replace trigger delete_clears_WB
+group WBTrigger
+--
+create or replace trigger delete_old_events
+group WBTrigger
+--
+create or replace trigger MailOnAccelOutstandingDNSReqs
+group WBTrigger
+--
+create or replace trigger nms_probe_hlth
+group WBTrigger
+--
+create or replace trigger resetOwnerGID
+group WBTrigger
+--
+create or replace trigger deduplicate_journal
+group WBTrigger
+--
+create or replace trigger DetectSmtsBladeReset
+group WBTrigger
+--
+create or replace trigger sm_top_probes_insert
+group self_monitoring_group
+--
+create or replace trigger sm_process_top_probes
+group self_monitoring_group
+--
+create or replace trigger sm_db_stats
+group self_monitoring_group
+--
+create or replace trigger sm_top_classes_reinsert
+group self_monitoring_group
+--
+create or replace trigger sm_client_time
+group self_monitoring_group
+--
+create or replace trigger sm_process_top_classes
+group self_monitoring_group
+--
+create or replace trigger sm_block_events_from_gateway
+group self_monitoring_group
+--
+create or replace trigger sm_connections
+group self_monitoring_group
+--
+create or replace trigger sm_delete_clears_display
+group self_monitoring_group
+--
+create or replace trigger sm_top_nodes_reinsert
+group self_monitoring_group
+--
+create or replace trigger sm_memstore
+group self_monitoring_group
+--
+create or replace trigger sm_triggers
+group self_monitoring_group
+--
+create or replace trigger sm_top_nodes_insert
+group self_monitoring_group
+--
+create or replace trigger sm_top_classes_deduplication
+group self_monitoring_group
+--
+create or replace trigger sm_top_probes_reinsert
+group self_monitoring_group
+--
+create or replace trigger sm_top_probes_deduplication
+group self_monitoring_group
+--
+create or replace trigger sm_expire_display_events
+group self_monitoring_group
+--
+create or replace trigger sm_dbops_stats
+group self_monitoring_group
+--
+create or replace trigger sm_deduplication_grade
+group self_monitoring_group
+--
+create or replace trigger sm_log_alert_inserts
+group self_monitoring_group
+--
+create or replace trigger sm_process_top_nodes
+group self_monitoring_group
+--
+create or replace trigger sm_top_classes_insert
+group self_monitoring_group
+--
+create or replace trigger sm_top_nodes_deduplication
+group self_monitoring_group
+--
+create or replace trigger sm_check_probe_heartbeats
+group self_monitoring_group
+--
+create or replace trigger sm_create_journal_on_severity_change
+group self_monitoring_group
+--
+create or replace trigger sm_time_to_display_severity
+group self_monitoring_group
+--
+create or replace trigger sm_log_alert_reinserts
+group self_monitoring_group
+--
+create or replace trigger update_service_affecting_events
+group sae
+--
+create or replace trigger rcaGateOnClearTransitionOnUpdate
+group RCA
+--
+create or replace trigger rcaGateOnClearTransitionOnReinsert
+group RCA
+--
+create or replace trigger rcaMetaClear
+group RCA
+--
+create or replace trigger rcaGateOnTimeout
+group RCA
+--
+create or replace trigger rcaCleanRCAGate
+group RCA
+--
+create or replace trigger rcaGateOnAutomationUpdate
+group RCA
+--
+create or replace trigger rcaGateOnInsert
+group RCA
+--
+create or replace trigger rcaGateOnFieldUpdate
+group RCA
+--
+create or replace trigger rcaGateOnDelete
+group RCA
+--
+create or replace trigger rcaGateCheckForAge
+group RCA
+--
+create or replace trigger rcaGateOnTallyIncrement
+group RCA
+--
+create or replace trigger rcaGateOnTallyIncrementTemporal
+group RCA
+--
+create or replace trigger deduplication
+group default_triggers
+--
+create or replace trigger agg_deduplication
+group default_triggers
+--
+create or replace trigger aen_heartbeat
+group default_triggers
+--
+create or replace trigger delete_clears_VS
+group default_triggers
+--
+create or replace trigger service_update
+group default_triggers
+--
+create or replace trigger clean_journal_table
+group default_triggers
+--
+create or replace trigger mail_on_probe_failure
+group default_triggers
+--
+create or replace trigger service_insert
+group default_triggers
+--
+create or replace trigger service_reinsert
+group default_triggers
+--
+create or replace trigger clean_details_table
+group default_triggers
+--
+create or replace trigger state_change
+group default_triggers
+--
+create or replace trigger wbDeleteNoise
+group default_triggers
+--
+create or replace trigger agg_new_row
+group default_triggers
+--
+create or replace trigger new_row
+group default_triggers
+--
+create or replace trigger deduplicate_details
+group default_triggers
+--
+create or replace trigger timestamp_inserts
+group default_triggers
+--
+create or replace trigger connection_watch_connect
+group connection_watch
+--
+create or replace trigger connection_watch_disconnect
+group connection_watch
+--
+create or replace trigger generic_clear
+group primary_only
+--
+create or replace trigger escalate_off
+group primary_only
+--
+create or replace trigger expire
+group primary_only
+--
+create or replace trigger delete_clears
+group primary_only
+--
+create or replace trigger mail_on_critical
+group primary_only
+--
+create or replace trigger flash_not_ack
+group primary_only
+--
+create or replace trigger resync_complete
+group primary_only
+--
+create or replace trigger disable_user
+group security_watch
+--
+create or replace trigger disable_inactive_users
+group security_watch
+--
+create or replace trigger reset_user
+group security_watch
+--
+create or replace trigger security_watch_security_failure
+group security_watch
+--
+create or replace trigger audit_config_alter_object
+group audit_config
+--
+create or replace trigger audit_config_drop_col_visual
+group audit_config
+--
+create or replace trigger audit_config_drop_object
+group audit_config
+--
+create or replace trigger audit_config_create_tool
+group audit_config
+--
+create or replace trigger audit_config_alter_prompt
+group audit_config
+--
+create or replace trigger audit_config_alter_class
+group audit_config
+--
+create or replace trigger audit_config_alter_col_visual
+group audit_config
+--
+create or replace trigger audit_config_drop_tool
+group audit_config
+--
+create or replace trigger audit_config_drop_prompt
+group audit_config
+--
+create or replace trigger audit_config_create_class
+group audit_config
+--
+create or replace trigger audit_config_alter_menu
+group audit_config
+--
+create or replace trigger audit_config_alter_conv
+group audit_config
+--
+create or replace trigger audit_config_create_menu
+group audit_config
+--
+create or replace trigger audit_config_create_prompt
+group audit_config
+--
+create or replace trigger audit_config_alter_tool
+group audit_config
+--
+create or replace trigger audit_config_create_col_visual
+group audit_config
+--
+create or replace trigger audit_config_create_conv
+group audit_config
+--
+create or replace trigger audit_config_alter_property
+group audit_config
+--
+create or replace trigger audit_config_permission_denied
+group audit_config
+--
+create or replace trigger audit_config_drop_conv
+group audit_config
+--
+create or replace trigger audit_config_drop_class
+group audit_config
+--
+create or replace trigger audit_config_drop_menu
+group audit_config
+--
+create or replace trigger audit_config_create_object
+group audit_config
+--
+create or replace trigger profiler_group_report
+group profiler_triggers
+--
+create or replace trigger profiler_report
+group profiler_triggers
+--
+create or replace trigger profiler_toggle
+group profiler_triggers
+--
+create or replace trigger trigger_stats_report
+group trigger_stat_reports
+--
+create or replace trigger my_objserv_eventrate
+group stats_triggers
+--
+create or replace trigger delete_stats
+group stats_triggers
+--
+create or replace trigger details_inserts
+group stats_triggers
+--
+create or replace trigger stats_reset
+group stats_triggers
+--
+create or replace trigger new_status_inserts
+group stats_triggers
+--
+create or replace trigger deduplicate_probestats
+group stats_triggers
+--
+create or replace trigger journal_inserts
+group stats_triggers
+--
+create or replace trigger status_updates
+group stats_triggers
+--
+create or replace trigger probestat_reinsert
+group stats_triggers
+--
+create or replace trigger dedup_status_inserts
+group stats_triggers
+--
+create or replace trigger statistics_cleanup
+group stats_triggers
+--
+create or replace trigger probe_statistics_report
+group stats_triggers
+--
+create or replace trigger probe_statistics_cleanup
+group stats_triggers
+--
+create or replace trigger probestats_reset
+group stats_triggers
+--
+create or replace trigger statistics_gather
+group stats_triggers
+--
+create or replace trigger probestat_insert
+group stats_triggers
+--
+create or replace trigger suppress_cross_domain_connections
+group itnm_triggers
+--
+create or replace trigger severity_from_causetype
+group itnm_triggers
+--
+create or replace trigger registry_new_probe
+group registry_triggers
+--
+create or replace trigger registry_reinsert_probe
+group registry_triggers
+--
+create or replace trigger registry_update_probe
+group registry_triggers
+--
+create or replace trigger registry_probe_disconnect
+group registry_triggers
+--
+create or replace trigger fixPBRdb
+group WBPrimaryOnly
+--
+create or replace trigger fixPBR
+group WBPrimaryOnly
+--
+create or replace trigger disconnect_iduc_missed
+group iduc_triggers
+--
+create or replace trigger iduc_stats_update
+group iduc_triggers
+--
+create or replace trigger iduc_messages_tblclean
+group iduc_triggers
+--
+create or replace trigger deduplicate_iduc_stats
+group iduc_triggers
+--
+create or replace trigger iduc_stats_insert
+group iduc_triggers
+--
+create or replace trigger scala_reinsert
+group scala_triggers
+--
+create or replace trigger scala_insert
+group scala_triggers
+--
+create or replace trigger trimFatJournals
+group WBTest
+--
+create or replace trigger mailOnCysA15Firewall
+group WBTest
+--
+create or replace trigger DetectTestWarnings
+group WBMail
+--
+create or replace trigger DetectTrapCacheTraps
+group WBMail
+--
+create or replace trigger mailOnWdc1Visibility
+group WBMail
+--
+create or replace trigger DetectBigIronWarnings
+group WBMail
+--
+create or replace trigger mailOnAmazonCloudAlert
+group WBMail
+--
+create or replace trigger DetectDiskWarnings
+group WBMail
+--
+create or replace trigger oslcreg_sp_new
+group oslc
+--
+create or replace trigger oslcreg_ecip_dedup_after
+group oslc
+--
+create or replace trigger oslcreg_sp_delete_before
+group oslc
+--
+create or replace trigger oslcreg_ecip_new
+group oslc
+--
+create or replace trigger oslcreg_ecipreg_delete
+group oslc
+--
+create or replace trigger oslcreg_ecip_delete_after
+group oslc
+--
+create or replace trigger oslcreg_ecipregs_new
+group oslc
+--
+create or replace trigger oslcreg_ecip_update_after
+group oslc
+--
+create or replace trigger oslcreg_ecip_dedup_before
+group oslc
+--
+create or replace trigger backup_succeeded
+group automatic_backup_system
+--
+create or replace trigger automatic_backup
+group automatic_backup_system
+--
+create or replace trigger backup_failed
+group automatic_backup_system
+--
+create or replace trigger backup_state_integrity
+group automatic_backup_system
+--
+create or replace trigger backup_counterpart_down
+group gateway_triggers
+--
+create or replace trigger backup_startup
+group gateway_triggers
+--
+create or replace trigger resync_finished
+group gateway_triggers
+--
+create or replace trigger pass_deletes
+group gateway_triggers
+--
+create or replace trigger backup_counterpart_up
+group gateway_triggers
+--
+create or replace trigger webtop_compatibility
+group compatibility_triggers
+--
+create or replace trigger qoiOverrideComplete
+group ASB1
+--
+create or replace trigger DetectLinkLoad
+group ASB1
+--
+create or replace trigger DetectDupArpEntries
+group ASB1
+--
+create or replace trigger CommLossFlap
+group ASB1
+--
+create or replace trigger DetectBladeFailover
+group ASB1
+--
+create or replace trigger DetectCarrierThreshold
+group ASB1
+--
+create or replace trigger clientClassToCarrier
+group ASB1
+--
+create or replace trigger ClearModemTraps
+group ASB1
+--
+create or replace trigger DetectTelemetryOutage
+group ASB1
+--
+create or replace trigger qoiCarrierInsert
+group ASB1
+--
+create or replace trigger getLinkName
+group ASB1
+--
+create or replace trigger summaryEnrich
+group ASB1
+--
+create or replace trigger DetectBeam28PowerImbalance
+group ASB1
+--
+create or replace trigger clientClassToCarrierdb
+group ASB1
+--
+create or replace trigger qoiCarrierClear
+group ASB1
+--
+create or replace trigger CarrierPowerSingleAmplifier
+group ASB1
+--
+create or replace trigger DetectCacheTraps
+group ASB1
+--
+create or replace trigger DetectAndrewTrap
+group ASB1
+--
+create or replace trigger system_watch_shutdown
+group system_watch
+--
+create or replace trigger system_watch_startup
+group system_watch
+--
+create or replace trigger originalSeverity
+group WBAuto
+--
+create or replace trigger confirmationTrapClearing
+group WBAuto
+--
+create or replace trigger insertMetaOutstandingDNSRequests
+group WBMeta
+--
+create or replace trigger metaPepMemWarning
+group WBMeta
+--
+create or replace trigger detectDhcpServerFailure
+group WBMeta
+--
+create or replace trigger resync_old_events
+group failback_triggers
+--
+create or replace trigger detect_agg_gate_resync_complete
+group failback_triggers
+--
+create or replace trigger disconnect_all_clients
+group failback_triggers
+--
+create or replace trigger RCamHlth
+group WBTrigger
+--
+create or replace trigger wb_reset_event_filter_time
+group WBTrigger
+--
+create or replace trigger MailOnAmazonCloud
+group WBTrigger
+--
+create or replace trigger delete_clears_WB
+group WBTrigger
+--
+create or replace trigger delete_old_events
+group WBTrigger
+--
+create or replace trigger MailOnAccelOutstandingDNSReqs
+group WBTrigger
+--
+create or replace trigger nms_probe_hlth
+group WBTrigger
+--
+create or replace trigger resetOwnerGID
+group WBTrigger
+--
+create or replace trigger deduplicate_journal
+group WBTrigger
+--
+create or replace trigger DetectSmtsBladeReset
+group WBTrigger
+--
+create or replace trigger sm_top_probes_insert
+group self_monitoring_group
+--
+create or replace trigger sm_process_top_probes
+group self_monitoring_group
+--
+create or replace trigger sm_db_stats
+group self_monitoring_group
+--
+create or replace trigger sm_top_classes_reinsert
+group self_monitoring_group
+--
+create or replace trigger sm_client_time
+group self_monitoring_group
+--
+create or replace trigger sm_process_top_classes
+group self_monitoring_group
+--
+create or replace trigger sm_block_events_from_gateway
+group self_monitoring_group
+--
+create or replace trigger sm_connections
+group self_monitoring_group
+--
+create or replace trigger sm_delete_clears_display
+group self_monitoring_group
+--
+create or replace trigger sm_top_nodes_reinsert
+group self_monitoring_group
+--
+create or replace trigger sm_memstore
+group self_monitoring_group
+--
+create or replace trigger sm_triggers
+group self_monitoring_group
+--
+create or replace trigger sm_top_nodes_insert
+group self_monitoring_group
+--
+create or replace trigger sm_top_classes_deduplication
+group self_monitoring_group
+--
+create or replace trigger sm_top_probes_reinsert
+group self_monitoring_group
+--
+create or replace trigger sm_top_probes_deduplication
+group self_monitoring_group
+--
+create or replace trigger sm_expire_display_events
+group self_monitoring_group
+--
+create or replace trigger sm_dbops_stats
+group self_monitoring_group
+--
+create or replace trigger sm_deduplication_grade
+group self_monitoring_group
+--
+create or replace trigger sm_log_alert_inserts
+group self_monitoring_group
+--
+create or replace trigger sm_process_top_nodes
+group self_monitoring_group
+--
+create or replace trigger sm_top_classes_insert
+group self_monitoring_group
+--
+create or replace trigger sm_top_nodes_deduplication
+group self_monitoring_group
+--
+create or replace trigger sm_check_probe_heartbeats
+group self_monitoring_group
+--
+create or replace trigger sm_create_journal_on_severity_change
+group self_monitoring_group
+--
+create or replace trigger sm_time_to_display_severity
+group self_monitoring_group
+--
+create or replace trigger sm_log_alert_reinserts
+group self_monitoring_group
+--
+create or replace trigger update_service_affecting_events
+group sae
+--
+create or replace trigger rcaGateOnClearTransitionOnUpdate
+group RCA
+--
+create or replace trigger rcaGateOnClearTransitionOnReinsert
+group RCA
+--
+create or replace trigger rcaMetaClear
+group RCA
+--
+create or replace trigger rcaGateOnTimeout
+group RCA
+--
+create or replace trigger rcaCleanRCAGate
+group RCA
+--
+create or replace trigger rcaGateOnAutomationUpdate
+group RCA
+--
+create or replace trigger rcaGateOnInsert
+group RCA
+--
+create or replace trigger rcaGateOnFieldUpdate
+group RCA
+--
+create or replace trigger rcaGateOnDelete
+group RCA
+--
+create or replace trigger rcaGateCheckForAge
+group RCA
+--
+create or replace trigger rcaGateOnTallyIncrement
+group RCA
+--
+create or replace trigger rcaGateOnTallyIncrementTemporal
+group RCA
+--
+create or replace trigger deduplication
+group default_triggers
+--
+create or replace trigger agg_deduplication
+group default_triggers
+--
+create or replace trigger aen_heartbeat
+group default_triggers
+--
+create or replace trigger delete_clears_VS
+group default_triggers
+--
+create or replace trigger service_update
+group default_triggers
+--
+create or replace trigger clean_journal_table
+group default_triggers
+--
+create or replace trigger mail_on_probe_failure
+group default_triggers
+--
+create or replace trigger service_insert
+group default_triggers
+--
+create or replace trigger service_reinsert
+group default_triggers
+--
+create or replace trigger clean_details_table
+group default_triggers
+--
+create or replace trigger state_change
+group default_triggers
+--
+create or replace trigger wbDeleteNoise
+group default_triggers
+--
+create or replace trigger agg_new_row
+group default_triggers
+--
+create or replace trigger new_row
+group default_triggers
+--
+create or replace trigger deduplicate_details
+group default_triggers
+--
+create or replace trigger timestamp_inserts
+group default_triggers
+--
+create or replace trigger connection_watch_connect
+group connection_watch
+--
+create or replace trigger connection_watch_disconnect
+group connection_watch
+--
+create or replace trigger generic_clear
+group primary_only
+--
+create or replace trigger escalate_off
+group primary_only
+--
+create or replace trigger expire
+group primary_only
+--
+create or replace trigger delete_clears
+group primary_only
+--
+create or replace trigger mail_on_critical
+group primary_only
+--
+create or replace trigger flash_not_ack
+group primary_only
+--
+create or replace trigger resync_complete
+group primary_only
+--
+create or replace trigger disable_user
+group security_watch
+--
+create or replace trigger disable_inactive_users
+group security_watch
+--
+create or replace trigger reset_user
+group security_watch
+--
+create or replace trigger security_watch_security_failure
+group security_watch
+--
+create or replace trigger audit_config_alter_object
+group audit_config
+--
+create or replace trigger audit_config_drop_col_visual
+group audit_config
+--
+create or replace trigger audit_config_drop_object
+group audit_config
+--
+create or replace trigger audit_config_create_tool
+group audit_config
+--
+create or replace trigger audit_config_alter_prompt
+group audit_config
+--
+create or replace trigger audit_config_alter_class
+group audit_config
+--
+create or replace trigger audit_config_alter_col_visual
+group audit_config
+--
+create or replace trigger audit_config_drop_tool
+group audit_config
+--
+create or replace trigger audit_config_drop_prompt
+group audit_config
+--
+create or replace trigger audit_config_create_class
+group audit_config
+--
+create or replace trigger audit_config_alter_menu
+group audit_config
+--
+create or replace trigger audit_config_alter_conv
+group audit_config
+--
+create or replace trigger audit_config_create_menu
+group audit_config
+--
+create or replace trigger audit_config_create_prompt
+group audit_config
+--
+create or replace trigger audit_config_alter_tool
+group audit_config
+--
+create or replace trigger audit_config_create_col_visual
+group audit_config
+--
+create or replace trigger audit_config_create_conv
+group audit_config
+--
+create or replace trigger audit_config_alter_property
+group audit_config
+--
+create or replace trigger audit_config_permission_denied
+group audit_config
+--
+create or replace trigger audit_config_drop_conv
+group audit_config
+--
+create or replace trigger audit_config_drop_class
+group audit_config
+--
+create or replace trigger audit_config_drop_menu
+group audit_config
+--
+create or replace trigger audit_config_create_object
+group audit_config
+--
+create or replace trigger profiler_group_report
+group profiler_triggers
+--
+create or replace trigger profiler_report
+group profiler_triggers
+--
+create or replace trigger profiler_toggle
+group profiler_triggers
+--
+create or replace trigger trigger_stats_report
+group trigger_stat_reports
+--
+create or replace trigger my_objserv_eventrate
+group stats_triggers
+--
+create or replace trigger delete_stats
+group stats_triggers
+--
+create or replace trigger details_inserts
+group stats_triggers
+--
+create or replace trigger stats_reset
+group stats_triggers
+--
+create or replace trigger new_status_inserts
+group stats_triggers
+--
+create or replace trigger deduplicate_probestats
+group stats_triggers
+--
+create or replace trigger journal_inserts
+group stats_triggers
+--
+create or replace trigger status_updates
+group stats_triggers
+--
+create or replace trigger probestat_reinsert
+group stats_triggers
+--
+create or replace trigger dedup_status_inserts
+group stats_triggers
+--
+create or replace trigger statistics_cleanup
+group stats_triggers
+--
+create or replace trigger probe_statistics_report
+group stats_triggers
+--
+create or replace trigger probe_statistics_cleanup
+group stats_triggers
+--
+create or replace trigger probestats_reset
+group stats_triggers
+--
+create or replace trigger statistics_gather
+group stats_triggers
+--
+create or replace trigger probestat_insert
+group stats_triggers
+--
+create or replace trigger suppress_cross_domain_connections
+group itnm_triggers
+--
+create or replace trigger severity_from_causetype
+group itnm_triggers
+--
+create or replace trigger registry_new_probe
+group registry_triggers
+--
+create or replace trigger registry_reinsert_probe
+group registry_triggers
+--
+create or replace trigger registry_update_probe
+group registry_triggers
+--
+create or replace trigger registry_probe_disconnect
+group registry_triggers
+--
+create or replace trigger fixPBRdb
+group WBPrimaryOnly
+--
+create or replace trigger fixPBR
+group WBPrimaryOnly
+--
+create or replace trigger disconnect_iduc_missed
+group iduc_triggers
+--
+create or replace trigger iduc_stats_update
+group iduc_triggers
+--
+create or replace trigger iduc_messages_tblclean
+group iduc_triggers
+--
+create or replace trigger deduplicate_iduc_stats
+group iduc_triggers
+--
+create or replace trigger iduc_stats_insert
+group iduc_triggers
+--
+create or replace trigger scala_reinsert
+group scala_triggers
+--
+create or replace trigger scala_insert
+group scala_triggers
+--
+create or replace trigger trimFatJournals
+group WBTest
+--
+create or replace trigger mailOnCysA15Firewall
+group WBTest
+--
+create or replace trigger DetectTestWarnings
+group WBMail
+--
+create or replace trigger DetectTrapCacheTraps
+group WBMail
+--
+create or replace trigger mailOnWdc1Visibility
+group WBMail
+--
+create or replace trigger DetectBigIronWarnings
+group WBMail
+--
+create or replace trigger mailOnAmazonCloudAlert
+group WBMail
+--
+create or replace trigger DetectDiskWarnings
+group WBMail
+--
+create or replace trigger oslcreg_sp_new
+group oslc
+--
+create or replace trigger oslcreg_ecip_dedup_after
+group oslc
+--
+create or replace trigger oslcreg_sp_delete_before
+group oslc
+--
+create or replace trigger oslcreg_ecip_new
+group oslc
+--
+create or replace trigger oslcreg_ecipreg_delete
+group oslc
+--
+create or replace trigger oslcreg_ecip_delete_after
+group oslc
+--
+create or replace trigger oslcreg_ecipregs_new
+group oslc
+--
+create or replace trigger oslcreg_ecip_update_after
+group oslc
+--
+create or replace trigger oslcreg_ecip_dedup_before
+group oslc
+--
+create or replace trigger backup_succeeded
+group automatic_backup_system
+--
+create or replace trigger automatic_backup
+group automatic_backup_system
+--
+create or replace trigger backup_failed
+group automatic_backup_system
+--
+create or replace trigger backup_state_integrity
+group automatic_backup_system
+--
+create or replace trigger backup_counterpart_down
+group gateway_triggers
+--
+create or replace trigger backup_startup
+group gateway_triggers
+--
+create or replace trigger resync_finished
+group gateway_triggers
+--
+create or replace trigger pass_deletes
+group gateway_triggers
+--
+create or replace trigger backup_counterpart_up
+group gateway_triggers

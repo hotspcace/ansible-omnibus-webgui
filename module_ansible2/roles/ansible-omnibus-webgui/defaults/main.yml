@@ -1,0 +1,6 @@
+---
+
+#objectserver_data_fstype: "ext3"
+#objectserver_data_device_bad: "{{ec2_vol.results[0].volume.attachment_set.device}}"
+#objectserver_data_device: "{{objectserver_data_device_bad | replace( '/dev/s', '/dev/xv' ) }}"
+#restart_state: "unless-stopped"

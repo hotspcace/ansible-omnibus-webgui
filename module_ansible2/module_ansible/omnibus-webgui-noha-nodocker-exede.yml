@@ -1,0 +1,25 @@
+---
+- hosts: "{{target}}"
+  gather_facts: no
+  become: yes
+  vars_files:
+    - "{{myenv}}-omnibus-webgui-noha-nodocker-exede.yml"
+    - "env.yml"
+  roles:
+    - role: "{{myenv}}-omnibus-secgroup"
+      tags: omnibus-secgroup
+
+    - role: base
+      tags: base
+
+#    - role: docker-install
+#      tags: docker-install
+
+    - role: omnibus-webgui-noha-nodocker-exede
+      tags: omnibus-webgui-noha-nodocker-exede
+
+    - role: omnibus-webgui-noha-fixpack9-install 
+      tags: omnibus-webgui-noha-fixpack9-install 
+
+    #- role: infra
+    #  tags: infra

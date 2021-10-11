@@ -1,0 +1,1 @@
+-- The contents of desktop.sql are include in application.sql and alertsdata.sql

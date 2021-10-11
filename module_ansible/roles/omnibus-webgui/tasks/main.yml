@@ -1,0 +1,721 @@
+---
+- name: Get hostname from this device
+  shell: "hostname -f"
+  args:
+    executable: /bin/bash
+  register: myhost
+
+- name: Debug myhost
+  debug: var=myhost.stdout
+
+#================================================
+- name: create config mount point
+  file:
+    path: /opt/accuoss
+    state: directory
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+
+
+- name: create config mount point
+  file:
+    path: /opt/IBM
+    state: directory
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+
+- name: create tmp directory for was install
+  file:
+    path: /tmp/installwas
+    state: directory
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+
+- name: create tmp directory for jazz install
+  file:
+    path: /tmp/installjazz
+    state: directory
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+
+- name: create tmp directory for webgui install
+  file:
+    path: /tmp/installwebgui
+    state: directory
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+
+- name: create host config directory for webgui 
+  file: 
+    path: /opt/accuoss/omnibus/configs/webgui
+    state: directory
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+
+- name: Update hosts file with objectserver entry
+  lineinfile:
+    dest: "/etc/hosts"
+    #line: "{{myobjectserverip.stdout}}  {{myobjectserver}} objectserver"
+    line: "{{myobjectserverip}}  {{myobjectserver}} objectserver"
+    owner: netcool
+    group: ncoadmin
+
+#- name: Install yum packages using a list
+#  yum:
+#    name:
+#      - tar
+#      - hostname
+#      - unzip
+#      - audit-libs
+#      - fontconfig
+#      - freetype
+#      - compat-libstdc++-33.i686
+#      - glibc.i686
+#      - gtk2
+#      - libICE
+#      - libSM
+#      - libX11
+#      - libXau
+#      - libXcursor
+#      - libXext
+#      - libXft
+#      - libXmu
+#      - libXp
+#      - libXpm
+#      - libXrender
+#      - libXt
+#      - libXtst
+#      - libstdc++.i686
+#      - libgcc.i686
+#      - libjpeg-turbo
+#      - libpng12
+#      - motif
+#      - dejavu-fonts-common
+#      - dejavu-sans-fonts
+#      - expat
+#      - glibc
+#      - libgcc
+#      - libidn
+#      - libstdc++
+#      - libuuid
+#      - libxcb
+#      - nss-softokn-freebl
+#      - pam
+#      - zlib
+#      - nss-softokn-freebl.i686
+#      - compat-libstdc++-33
+#      - git
+#      - logrotate
+#      - strace
+#      - vim
+#      - bc
+#
+- name: copy webgui install response file
+  copy:
+    src: webgui-response.xml
+    dest: "/opt/accuoss/omnibus/configs/webgui/webgui-response.xml"
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+    force: yes
+
+- name: copy ws jazz install response file
+  copy:
+    src: ws_jazz_install_response_file.xml 
+    dest: "/opt/accuoss/omnibus/configs/webgui/ws_jazz_install_response_file.xml"
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+    force: yes
+
+- name: copy webgui_older_files_response_file.xml  
+  copy:
+    src: webgui_older_files_response_file.xml 
+    dest: "/opt/accuoss/omnibus/configs/webgui/webgui_older_files_response_file.xml" 
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+    force: yes
+
+#- cron:
+#    name: "watch_for_auth_elb_changes"
+#    minute: "1"
+#    job: "/bin/bash /opt/watch_for_auth_elb_changes.sh"
+
+#- name: copy webgui config file
+#  copy:
+#    src: "ncwDataSourceDefinitions.xml"
+#    dest: "/opt/accuoss/omnibus/configs/webgui/ncwDataSourceDefinitions.xml"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy run_jazzsm.sh config file
+#  copy:
+#    src: run_jazzsm.sh
+#    dest: "/opt/accuoss/omnibus/configs/webgui/run_jazzsm.sh"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy webgui config file
+#  copy:
+#    src: server.init
+#    dest: "/opt/accuoss/omnibus/configs/webgui/server.init"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy webgui config file
+#  copy:
+#    src: server.xml
+#    dest: "/opt/accuoss/omnibus/configs/webgui/server.xml"
+##    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy webgui config file
+#  copy:
+#    src: serverindex.xml
+#    dest: "/opt/accuoss/omnibus/configs/webgui/serverindex.xml"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy wimconfig.xml file
+#  copy:
+#    src: wimconfig.xml
+#    dest: "/opt/accuoss/omnibus/configs/webgui/wimconfig.xml"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy post_webgui_config.sh file
+#  copy:
+#    src: post_webgui_config.sh
+#    dest: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config.sh"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy post_webgui_config2.sh file
+#  copy:
+#    src: post_webgui_config2.sh
+#    dest: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config2.sh"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+
+#- name: copy post_webgui_config3.sh file
+#  copy:
+#    src: post_webgui_config3.sh
+#    dest: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config3.sh"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy post_webgui_config4.sh file
+#  copy:
+#    src: post_webgui_config4.sh
+#    dest: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config4.sh"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy post_webgui_config5.sh file
+#  copy:
+#    src: post_webgui_config5.sh
+#    dest: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config5.sh"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+#
+#- name: copy changeKeystorePassword.py file
+#  copy:
+#    src: changeKeystorePassword.py
+#    dest: "/opt/accuoss/omnibus/configs/webgui/changeKeystorePassword.py"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+
+#- name: copy awsldapcert file
+#  copy:
+#    src: awsldapcert
+#    dest: "/opt/accuoss/omnibus/configs/webgui/awsldapcert"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+
+#- name: copy awsldapcert2 file
+#  copy:
+#    src: awsldapcert2
+#    dest: "/opt/accuoss/omnibus/configs/webgui/awsldapcert2"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+
+#- name: copy heap_mem_increase.py file
+#  copy:
+#    src: heap_mem_increase.py
+#    dest: "/opt/accuoss/omnibus/configs/webgui/heap_mem_increase.py"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+##    force: yes
+
+#- name: copy webgui config file
+#  copy:
+#    src: run_jazzsm.sh
+#    dest: "/opt/accuoss/omnibus/configs/webgui/run_jazzsm.sh"
+#    owner: netcool
+#    group: ncoadmin
+#    mode: 0755
+#    force: yes
+
+
+#- name: copy replace_root_cert.py file
+##  copy:
+##    src: replace_root_cert.py
+##    dest: "/opt/accuoss/omnibus/configs/webgui/replace_root_cert.py"
+##    owner: netcool
+##    group: ncoadmin
+##    mode: 0755
+##    force: yes
+#
+##- name: copy hostname_change_non_prod.py file
+##  copy:
+##    src: hostname_change_non_prod.py
+##    dest: "/opt/accuoss/omnibus/configs/webgui/hostname_change_non_prod.py"
+##    owner: netcool
+##    group: ncoadmin
+##    mode: 0755
+##    force: yes
+#
+##- name: copy hostname_change_prod.py file
+##  copy:
+##    src: hostname_change_prod.py
+##    dest: "/opt/accuoss/omnibus/configs/webgui/hostname_change_prod.py"
+##    owner: netcool
+##    group: ncoadmin
+##    mode: 0755
+##    force: yes
+#
+##- name: copy replace_root_cert_prod.py file
+##  copy:
+##    src: replace_root_cert_prod.py
+##    dest: "/opt/accuoss/omnibus/configs/webgui/replace_root_cert_prod.py"
+##    owner: netcool
+##    group: ncoadmin
+##    mode: 0755
+##    force: yes
+#
+##- name: copy prod_root_replacement_cert
+##  copy:
+##    src: prod_root_replacement_cert
+##    dest: "/opt/accuoss/omnibus/configs/webgui/root_replacement_cert"
+##    owner: netcool
+##    group: ncoadmin
+##    mode: 0755
+##    force: yes
+#
+##################################################################
+# Install Instalation Manager
+##################################################################
+- stat: path=/home/netcool/IBM/eclipse/tools
+  register: install_manager_path
+
+- debug: msg="The install manager is not installed so it will be installed now."
+  when: install_manager_path.stat.exists != True
+- debug: msg="The install manager is installed so this step will be skipped."
+  when: install_manager_path.stat.exists == True
+
+- unarchive:
+    src: /opt/accuoss/software/Software/Installation_Manager/agent.installer.linux.gtk.x86_64_1.9.1003.20200730_2125.zip
+    dest: /home/netcool/InstallationManager
+    remote_src: True
+  become: yes
+  become_user: netcool
+  when: install_manager_path.stat.exists != True
+
+- name: Change ownership of files
+  shell: "chown -R netcool:ncoadmin /home/netcool/InstallationManager"
+
+- name: Install IBM Install Manager
+  shell: "/home/netcool/InstallationManager/userinstc --launcher.ini /home/netcool/InstallationManager/user-silent-install.ini -installationDirectory /home/netcool/IBM -acceptLicense -ShowVerboseProgress"
+  become: yes
+  become_user: netcool
+  when: install_manager_path.stat.exists != True
+#################################################################
+
+#################################################################
+# Was path will be checked
+################################################################# 
+- stat: path=/tmp/installwas/WASRepository
+  register: waspath
+
+- debug: msg="The was files have not been unzipped yet so they will now be unzipped."
+  when: waspath.stat.exists != True
+- debug: msg="The was files have already been unzipped so this step will be skipped."
+  when: waspath.stat.exists == True
+
+#################################################################
+# Prepare WebSphere for installation
+################################################################# 
+- name: copy was install files 
+  copy:
+    src: /opt/accuoss/software/Software/WebGUI_Install/IBM_WAS_FOR_JSM_FOR_LNX_ML/WASRepository 
+    dest: "/tmp/installwas/"
+    remote_src: yes
+    directory_mode: yes
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+    force: no 
+
+- name: copy jazz install files 
+  copy:
+    src: /opt/accuoss/software/Software/WebGUI_Install/JAZZ_FOR_SM_1.1.2.1_FOR_LNX
+    dest: "/tmp/installjazz/"
+    remote_src: yes
+    directory_mode: yes
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+    force: no 
+
+- name: copy webgui install files
+  copy:
+    src: /opt/accuoss/software/Software/WebGUI_Install/OMNIbus-v8.1.0.4-WebGUI.linux64
+    dest: "/tmp/installwebgui/"
+    remote_src: yes
+    directory_mode: yes
+    owner: netcool
+    group: ncoadmin
+    mode: 0755
+    force: no 
+
+
+#################################################################
+# webgui path will be checked
+#################################################################
+
+- stat: path=/tmp/installwebgui/OMNIbus-v8.1.0.4-WebGUI.linux64/OMNIbusWebGUIRepository
+  register: wgpath
+
+- debug: msg="The webgui files have not been unzipped yet so they will now be unzipped."
+  when: wgpath.stat.exists != True
+- debug: msg="The webgui files have already been unzipped so this step will be skipped."
+  when: wgpath.stat.exists == True
+
+- name: Copy webgui install files over 
+  shell: "cp -R /opt/accuoss/software/Software/WebGUI_Install/OMNIbus-v8.1.0.4-WebGUI.linux64/* /tmp/installwebgui/"
+  when: wgpath.stat.exists != True
+
+#- unarchive:
+#    src: /opt/accuoss/software/Software/WebGUI_Install/ 
+#    dest: /tmp/installwas/
+#    remote_src: True
+#  when: waspath.stat.exists != True
+#
+#- name: Remove WSPAS8.5.5.18_FOR_JSM_LNX_ML.zip 
+#  shell: "rm -f /tmp/installwas/WSPAS8.5.5.18_FOR_JSM_LNX_ML.zip"
+#  when: waspath.stat.exists != True
+# 
+#- unarchive:
+#    src: /tmp/installwas/CC8RRML_signed.zip
+#    dest: /tmp/installwas/
+#    remote_src: True
+#  when: waspath.stat.exists != True
+#
+#- name: Remove CC8RRML_signed.zip 
+#  shell: "rm -f /tmp/installwas/CC8RRML_signed.zip"
+#  when: waspath.stat.exists != True
+#  
+#- unarchive:
+#    src: /tmp/installwas/IBM-was-8.5.5.9-linux64.zip
+#    dest: /tmp/installwas/
+#    remote_src: True
+#  when: waspath.stat.exists != True
+#
+#- name: Remove IBM-was-8.5.5.9-linux64.zip 
+#  shell: "rm -f /tmp/installwas/IBM-was-8.5.5.9-linux64.zip"
+#  when: waspath.stat.exists != True
+
+
+#- unarchive:
+#    src: /opt/accuoss/software/Software/NOI/was_jazz/WSPAS8.5.5.18_FOR_JSM_LNX_ML.zip
+#    dest: /tmp/installwas/
+#    remote_src: True
+#  when: waspath.stat.exists != True
+#
+#- name: Remove WSPAS8.5.5.18_FOR_JSM_LNX_ML.zip
+#  shell: "rm -f /tmp/installwas/WSPAS8.5.5.18_FOR_JSM_LNX_ML.zip"
+#  when: waspath.stat.exists != True
+#
+#- unarchive:
+#    src: /tmp/installwas/CC8RRML_signed.zip
+#    dest: /tmp/installwas/
+#    remote_src: True
+#  when: waspath.stat.exists != True
+#
+#- name: Remove CC8RRML_signed.zip
+#  shell: "rm -f /tmp/installwas/CC8RRML_signed.zip"
+#  when: waspath.stat.exists != True
+#
+#- unarchive:
+#    src: /tmp/installwas/IBM-was-8.5.5.9-linux64.zip
+#    dest: /tmp/installwas/
+#    remote_src: True
+#  when: waspath.stat.exists != True
+#
+#- name: Remove IBM-was-8.5.5.9-linux64.zip
+#  shell: "rm -f /tmp/installwas/IBM-was-8.5.5.9-linux64.zip"
+#  when: waspath.stat.exists != True
+
+#################################################################
+# jazz path will be checked
+#################################################################
+#- stat: path=/tmp/installjazz/JazzSMRepository
+#  register: jazzpath
+#
+#- debug: msg="The jazz files have not been unzipped yet so they will now be unzipped."
+#  when: jazzpath.stat.exists != True
+#- debug: msg="The jazz files have already been unzipped so this step will be skipped."
+#  when: jazzpath.stat.exists == True
+#
+#- unarchive:
+#    src: /opt/accuoss/software/Software/NOI/was_jazz/JSM1.1.3.5_FOR_LNX_ML.zip
+#    dest: /tmp/installjazz/
+#    remote_src: True
+#  when: jazzpath.stat.exists != True
+#
+#- name: Remove /tmp/installjazz/JSM1.1.3.5_FOR_LNX_ML.zip
+#  shell: "rm -f /tmp/installjazz/JSM1.1.3.5_FOR_LNX_ML.zip"
+#  when: jazzpath.stat.exists != True
+#
+#- unarchive:
+#    src: /tmp/installjazz/G00NLZX_signed.zip
+#    dest: /tmp/installjazz/
+#    remote_src: True
+#  when: jazzpath.stat.exists != True
+#
+#- name: Remove /tmp/installjazz/G00NLZX_signed.zip
+#  shell: "rm -f /tmp/installjazz/G00NLZX_signed.zip"
+#  when: jazzpath.stat.exists != True
+
+#################################################################
+# webgui path will be checked
+#################################################################
+#- stat: path=/tmp/installwebgui/OMNIbusWebGUIRepository
+#  register: wgpath
+#
+#- debug: msg="The webgui files have not been unzipped yet so they will now be unzipped."
+#  when: wgpath.stat.exists != True
+#- debug: msg="The webgui files have already been unzipped so this step will be skipped."
+#  when: wgpath.stat.exists == True
+
+#################################################################
+# Prepare WebGUI Files for installation
+#################################################################
+#- unarchive:
+#    src: /opt/accuoss/software/Software/NOI/OMNIbus/TNOMN_V8.1.0.17_WBGEFOR_NOI_LNX_E.zip
+#    dest: /tmp/installwebgui/
+#    remote_src: True
+#  when: wgpath.stat.exists != True
+#
+#- name: Remove /tmp/installwebgui/TNOMN_V8.1.0.17_WBGEFOR_NOI_LNX_E.zip
+#  shell: "rm -f /tmp/installwebgui/TNOMN_V8.1.0.17_WBGEFOR_NOI_LNX_E.zip" 
+#  when: wgpath.stat.exists != True
+
+#- unarchive:
+#    src: /opt/accuoss/software/Software/NOI/OMNIbus/TNOMN_V8.1.0.17_WBGEFOR_NOI_LNX_E.zip
+#    dest: /tmp/installwebgui/
+#    remote_src: True
+#  when: wgpath.stat.exists != True
+
+#- name: Remove /tmp/installwebgui/TNOMN_V8.1.0.17_WBGEFOR_NOI_LNX_E.zip
+#  shell: "rm -f /tmp/installwebgui/TNOMN_V8.1.0.17_WBGEFOR_NOI_LNX_E.zip"
+#  when: wgpath.stat.exists != True
+
+#################################################################
+# Replace permissions recursively for all install files
+################################################################# 
+- name: chown the install directories 
+  shell: "chown -R netcool:ncoadmin /tmp/installwas && chown -R netcool:ncoadmin /tmp/installjazz && chown -R netcool:ncoadmin /tmp/installwebgui"
+#################################################################
+
+#################################################################
+# Instal Websphere and Jazz 
+#################################################################
+- stat: path=/opt/IBM/WebSphere
+  register: ws_path 
+
+- debug: msg="WebGUI is not installed so it will be installed now."
+  when: ws_path.stat.exists != True
+- debug: msg="WebGUI is installed so this step will be skipped."
+  when: ws_path.stat.exists == True
+
+- name: Install WebSphere and Jazz 
+  shell: "/home/netcool/IBM/eclipse/tools/imcl -input /opt/accuoss/omnibus/configs/webgui/webgui_older_files_response_file.xml -silent -nosplash -acceptlicense -ShowVerboseProgress"
+  #shell: "/home/netcool/IBM/eclipse/tools/imcl -input /opt/accuoss/omnibus/configs/webgui/ws_jazz_install_response_file.xml -silent -nosplash -acceptlicense -ShowVerboseProgress"
+  #shell: "/home/netcool/IBM/eclipse/tools/imcl -input /opt/accuoss/omnibus/configs/webgui/webgui-response.xml -silent -nosplash -acceptlicense -ShowVerboseProgress -log /root/install.log"
+  become: yes 
+  become_user: netcool 
+  when: ws_path.stat.exists != True 
+
+#################################################################
+# Instal WebGUI 
+#################################################################
+- stat: path=/opt/IBM/WebGUI
+  register: wg_path
+
+- debug: msg="WebGUI is not installed so it will be installed now."
+  when: wg_path.stat.exists != True
+- debug: msg="WebGUI is installed so this step will be skipped."
+  when: wg_path.stat.exists == True
+
+- name: Install WebGUI  
+  shell: "/home/netcool/IBM/eclipse/tools/imcl -input /opt/accuoss/omnibus/configs/webgui/webgui-response.xml -nosplash -acceptlicense -ShowVerboseProgress"
+  become: yes
+  become_user: netcool
+  when: wg_path.stat.exists != True
+
+
+#- stat: path=/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml
+#  register: ncwDataSourceDefinitionslink1
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml does not exist so something must have went wrong with the install. Please check and run again."
+#  when: ncwDataSourceDefinitionslink1.stat.islnk is not defined
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml exists but is not a symlink so it will now become a symlink"
+#  when: ncwDataSourceDefinitionslink1.stat.islnk is defined and ncwDataSourceDefinitionslink1.stat.islnk == False
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml exists and is already a symlink so this step will be skipped"
+#  when: ncwDataSourceDefinitionslink1.stat.islnk is defined and ncwDataSourceDefinitionslink1.stat.islnk
+
+#- stat: path=/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml
+#  register: ncwDataSourceDefinitionslink2
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml does not exist so something must have went wrong with the install. Please check and run again."
+#  when: ncwDataSourceDefinitionslink2.stat.islnk is not defined
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml exists but is not a symlink so it will now become a symlink"
+#  when: ncwDataSourceDefinitionslink2.stat.islnk is defined and ncwDataSourceDefinitionslink2.stat.islnk == False
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml exists and is already a symlink so this step will be skipped"
+#  when: ncwDataSourceDefinitionslink2.stat.islnk is defined and ncwDataSourceDefinitionslink2.stat.islnk
+
+#- stat: path=/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml
+#  register: wimconfiglink 
+#- debug: msg="/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml does not exist so something must have went wrong with the install. Please check and run again."
+#  when: wimconfiglink.stat.islnk is not defined
+#- debug: msg="/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml exists but is not a symlink so it will now become a symlink"
+#  when: wimconfiglink.stat.islnk is defined and wimconfiglink.stat.islnk == False
+#- debug: msg="/opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml exists and is already a symlink so this step will be skipped"
+#  when: wimconfiglink.stat.islnk is defined and wimconfiglink.stat.islnk
+
+#- stat: path=/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init
+#  register: serverinitlink 
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init does not exist so something must have went wrong with the install. Please check and run again."
+#  when: serverinitlink.stat.islnk is not defined
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init exists but is not a symlink so it will now become a symlink"
+#  when: serverinitlink.stat.islnk is defined and serverinitlink.stat.islnk == False
+#- debug: msg="/opt/IBM/netcool/gui/omnibus_webgui/etc/server.init exists and is already a symlink so this step will be skipped"
+#  when: serverinitlink.stat.islnk is defined and serverinitlink.stat.islnk
+
+#- name: Remove /opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml and create symlink  
+#  shell: "rm -f /opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml && ln -s /opt/accuoss/omnibus/configs/webgui/ncwDataSourceDefinitions.xml /opt/IBM/netcool/gui/omnibus_webgui/bin/ncwDataSourceDefinitions.xml"
+#  become: true
+#  when: ncwDataSourceDefinitionslink1.stat.islnk is defined and ncwDataSourceDefinitionslink1.stat.islnk == False
+#
+#- name: Remove /opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml and create symlink 
+#  shell: "rm -f /opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml && ln -s /opt/accuoss/omnibus/configs/webgui/ncwDataSourceDefinitions.xml /opt/IBM/netcool/gui/omnibus_webgui/etc/datasources/ncwDataSourceDefinitions.xml"
+#  become: true
+#  when: ncwDataSourceDefinitionslink2.stat.islnk is defined and ncwDataSourceDefinitionslink2.stat.islnk == False  
+#
+#- name: Remove /opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml and create symlink 
+#  shell: "rm -f /opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml && ln -s /opt/accuoss/omnibus/configs/webgui/wimconfig.xml /opt/IBM/JazzSM/profile/config/cells/JazzSMNode01Cell/wim/config/wimconfig.xml"
+#  become: true
+#  when: wimconfiglink.stat.islnk is defined and wimconfiglink.stat.islnk == False
+#
+#- name: Remove /opt/IBM/netcool/gui/omnibus_webgui/etc/server.init and create symlink 
+#  shell: "rm -f /opt/IBM/netcool/gui/omnibus_webgui/etc/server.init && ln -s /opt/accuoss/omnibus/configs/webgui/server.init /opt/IBM/netcool/gui/omnibus_webgui/etc/server.init"
+#  become: true
+#  when: serverinitlink.stat.islnk is defined and serverinitlink.stat.islnk == False
+#
+#- name: Start the WebGUI server 
+#  shell: "/opt/IBM/JazzSM/profile/bin/startServer.sh server1 -script /opt/IBM/JazzSM/profile/bin/startJazz.sh"
+#  become: true
+#
+#- name: Run post configuration1 on container
+#  shell: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config.sh"
+#  become: true
+#  register: post_results_1
+
+#- debug:
+#    var: post_results_1 
+#    verbosity: 1
+#
+#- pause:
+#    seconds: 30 
+#
+##- name: Run post configuration2 on container
+#  shell: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config2.sh"
+#  become: true
+#  register: post_results_2
+#
+#- debug:
+#    var: post_results_2
+#    verbosity: 1
+#
+#- pause:
+#    seconds: 30
+#
+#- name: Run post configuration3 on container
+#  shell: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config3.sh"
+#  become: true
+#  register: post_results_3
+#
+#- debug:
+#    var: post_results_3
+#    verbosity: 1
+#
+#- pause:
+#    seconds: 30
+
+
+#- name: Run post configuration4 on container
+#  shell: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config4.sh"
+#  become: true
+#  register: post_results_4
+#
+#- debug:
+#    var: post_results_4
+#    verbosity: 1
+
+#- pause:
+#    seconds: 30
+
+#- name: Run post configuration5 on container
+#  shell: "/opt/accuoss/omnibus/configs/webgui/post_webgui_config5.sh"
+#  become: true
+#  register: post_results_5
+#
+#- debug:
+#    var: post_results_5
+#    verbosity: 1
+
